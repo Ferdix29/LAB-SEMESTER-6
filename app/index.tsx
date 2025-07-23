@@ -1,61 +1,107 @@
-// app/index.tsx (Expo Router entry)
-import React, { useState } from 'react';
-import { View, Image, TouchableWithoutFeedback, FlatList, Dimensions, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 
-// Grid settings
-const screenWidth = Dimensions.get('window').width;
-const numColumns = 3;
-const cellSize = screenWidth / numColumns - 10;
+// Daftar lengkap nama mahasiswa (sudah dirapikan)
+const studentList = [
+  "Nur Milani Hidayah", "Majeri", "Siti Marwa", "Nabila Ismail Matta", "Muliana",
+  "Nurmisba", "Alvian Syah Burhani", "Ahmad Fathir", "Andi Citra Ayu Lestari",
+  "Ferdiansyah", // Nama referensi
+  "Yusri Ali", "Syawaluddin", "Parwati", "Hamdani", "Muhammad Faturrachman Iswan",
+  "Muhammad Adianto", "Fajar Eka Alamsyah", "Erick Yusuf Kotte", "A. Fajar Apriliawan",
+  "Farisan", "Ali Sulton S Palilati", "A. Ikram Mukarram"
+];
 
-// 9 main + 9 alternate images from Unsplash
-const imagePairs = Array.from({ length: 9 }, (_, i) => ({
-  id: i,
-  main: `https://source.unsplash.com/300x300/?nature,${i + 1}`,
-  alt: `https://source.unsplash.com/300x300/?forest,${i + 1}`
-}));
+// Definisikan 10 nama fontFamily sesuai yang didaftarkan di useFonts
+const fontFamilies = [
+  'BebasNeue', 'FiraSans', 'Goldman', 'Lato', 'PTSerif',
+  'Bitcount', 'IntelOneMono', 'NotoSansJP', 'OpenSans', 'RobotoCondensed'
+];
 
-export default function Home() {
-  const [images, setImages] = useState(
-    imagePairs.map(pair => ({ ...pair, useAlt: false, scale: 1 }))
-  );
+export default function StudentDisplayScreen() {
+  const referenceName = "Ferdiansyah";
+  const totalStudents = studentList.length;
+  const referenceIndex = studentList.findIndex(name => name === referenceName);
 
-  const handlePress = (id: number) => {
-    setImages(prev =>
-      prev.map(img => {
-        if (img.id === id) {
-          const newScale = Math.min(img.scale * 1.2, 2);
-          return { ...img, useAlt: !img.useAlt, scale: newScale };
-        }
-        return img;
-      })
-    );
+  // Fungsi untuk mendapatkan indeks secara sirkular (memutar)
+  const getCircularIndex = (baseIndex: number, offset: number) => {
+    return (baseIndex + offset + totalStudents) % totalStudents;
   };
 
+  // Logika untuk memilih 5 nama sebelum dan 5 nama sesudah
+  const selectedNames = [
+    ...Array.from({ length: 5 }, (_, i) => studentList[getCircularIndex(referenceIndex, i - 5)]),
+    ...Array.from({ length: 5 }, (_, i) => studentList[getCircularIndex(referenceIndex, i + 1)])
+  ];
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={images}
-        keyExtractor={item => item.id.toString()}
-        numColumns={numColumns}
-        renderItem={({ item }) => (
-          <TouchableWithoutFeedback onPress={() => handlePress(item.id)}>
-            <Image
-              source={{ uri: item.useAlt ? item.alt : item.main }}
-              style={[styles.image, { transform: [{ scale: item.scale }] }]} 
-            />
-          </TouchableWithoutFeedback>
-        )}
-      />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.header}>Daftar Nama Mahasiswa</Text>
+        <Text style={styles.subHeader}>Tugas 4 Lab</Text>
+        <View style={styles.nameListContainer}>
+          {selectedNames.map((name, index) => (
+            <View key={index} style={styles.nameCard}>
+              <Text style={[styles.nameText, { fontFamily: fontFamilies[index] }]}>
+                {name}
+              </Text>
+              <Text style={styles.fontInfo}>
+                Font: {fontFamilies[index]}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+// Stylesheet unik untuk tampilan yang menarik
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 5, backgroundColor: '#fff' },
-  image: {
-    width: cellSize,
-    height: cellSize,
-    margin: 5,
-    borderRadius: 8,
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#EBF4FF',
+  },
+  container: {
+    paddingVertical: 30,
+    paddingHorizontal: 15,
+  },
+  header: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#0A2540',
+    textAlign: 'center',
+    fontFamily: 'Goldman',
+    marginBottom: 8,
+  },
+  subHeader: {
+    fontSize: 18,
+    color: '#526A81',
+    textAlign: 'center',
+    marginBottom: 25,
+    fontFamily: 'PTSerif',
+  },
+  nameListContainer: {
+    width: '100%',
+  },
+  nameCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  nameText: {
+    fontSize: 22,
+    color: '#1A385A',
+  },
+  fontInfo: {
+    fontSize: 14,
+    color: '#7C93AB',
+    marginTop: 6,
+    fontStyle: 'italic',
   },
 });
