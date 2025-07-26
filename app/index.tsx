@@ -1,107 +1,73 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Ionicons, FontAwesome, MaterialIcons, Entypo, Feather } from '@expo/vector-icons';
 
-// Daftar lengkap nama mahasiswa (sudah dirapikan)
-const studentList = [
-  "Nur Milani Hidayah", "Majeri", "Siti Marwa", "Nabila Ismail Matta", "Muliana",
-  "Nurmisba", "Alvian Syah Burhani", "Ahmad Fathir", "Andi Citra Ayu Lestari",
-  "Ferdiansyah", // Nama referensi
-  "Yusri Ali", "Syawaluddin", "Parwati", "Hamdani", "Muhammad Faturrachman Iswan",
-  "Muhammad Adianto", "Fajar Eka Alamsyah", "Erick Yusuf Kotte", "A. Fajar Apriliawan",
-  "Farisan", "Ali Sulton S Palilati", "A. Ikram Mukarram"
-];
-
-// Definisikan 10 nama fontFamily sesuai yang didaftarkan di useFonts
-const fontFamilies = [
-  'BebasNeue', 'FiraSans', 'Goldman', 'Lato', 'PTSerif',
-  'Bitcount', 'IntelOneMono', 'NotoSansJP', 'OpenSans', 'RobotoCondensed'
-];
-
-export default function StudentDisplayScreen() {
-  const referenceName = "Ferdiansyah";
-  const totalStudents = studentList.length;
-  const referenceIndex = studentList.findIndex(name => name === referenceName);
-
-  // Fungsi untuk mendapatkan indeks secara sirkular (memutar)
-  const getCircularIndex = (baseIndex: number, offset: number) => {
-    return (baseIndex + offset + totalStudents) % totalStudents;
-  };
-
-  // Logika untuk memilih 5 nama sebelum dan 5 nama sesudah
-  const selectedNames = [
-    ...Array.from({ length: 5 }, (_, i) => studentList[getCircularIndex(referenceIndex, i - 5)]),
-    ...Array.from({ length: 5 }, (_, i) => studentList[getCircularIndex(referenceIndex, i + 1)])
+export default function HomeScreen() {
+  const icons = [
+    { name: 'home', lib: 'Ionicons', icon: <Ionicons name="home" size={50} color="#007bff" /> },
+    { name: 'camera', lib: 'FontAwesome', icon: <FontAwesome name="camera" size={50} color="#28a745" /> },
+    { name: 'email', lib: 'MaterialIcons', icon: <MaterialIcons name="email" size={50} color="#dc3545" /> },
+    { name: 'user', lib: 'FontAwesome', icon: <FontAwesome name="user" size={50} color="#6f42c1" /> },
+    { name: 'settings', lib: 'Ionicons', icon: <Ionicons name="settings" size={50} color="#fd7e14" /> },
+    { name: 'bell', lib: 'FontAwesome', icon: <FontAwesome name="bell" size={50} color="#20c997" /> },
+    { name: 'chat', lib: 'Entypo', icon: <Entypo name="chat" size={50} color="#e83e8c" /> },
+    { name: 'music', lib: 'Feather', icon: <Feather name="music" size={50} color="#17a2b8" /> },
+    { name: 'lock', lib: 'FontAwesome', icon: <FontAwesome name="lock" size={50} color="#343a40" /> },
+    { name: 'heart', lib: 'MaterialIcons', icon: <MaterialIcons name="favorite" size={50} color="#ff4757" /> },
   ];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.header}>Daftar Nama Mahasiswa</Text>
-        <Text style={styles.subHeader}>Tugas 4 Lab</Text>
-        <View style={styles.nameListContainer}>
-          {selectedNames.map((name, index) => (
-            <View key={index} style={styles.nameCard}>
-              <Text style={[styles.nameText, { fontFamily: fontFamilies[index] }]}>
-                {name}
-              </Text>
-              <Text style={styles.fontInfo}>
-                Font: {fontFamilies[index]}
-              </Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Daftar Ikon</Text>
+      <View style={styles.grid}>
+        {icons.map((item, index) => (
+          <View key={index} style={styles.card}>
+            {item.icon}
+            <Text style={styles.label}>{item.name}</Text>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
-// Stylesheet unik untuk tampilan yang menarik
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#EBF4FF',
-  },
   container: {
-    paddingVertical: 30,
-    paddingHorizontal: 15,
-  },
-  header: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#0A2540',
-    textAlign: 'center',
-    fontFamily: 'Goldman',
-    marginBottom: 8,
-  },
-  subHeader: {
-    fontSize: 18,
-    color: '#526A81',
-    textAlign: 'center',
-    marginBottom: 25,
-    fontFamily: 'PTSerif',
-  },
-  nameListContainer: {
-    width: '100%',
-  },
-  nameCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    flexGrow: 1,
     padding: 20,
-    marginBottom: 15,
-    elevation: 4,
+    backgroundColor: '#f8f9fa',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#343a40',
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 15,
+  },
+  card: {
+    width: 100,
+    height: 120,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 3,
   },
-  nameText: {
-    fontSize: 22,
-    color: '#1A385A',
-  },
-  fontInfo: {
+  label: {
+    marginTop: 8,
     fontSize: 14,
-    color: '#7C93AB',
-    marginTop: 6,
-    fontStyle: 'italic',
+    fontWeight: '600',
+    color: '#495057',
   },
 });

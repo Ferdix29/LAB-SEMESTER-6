@@ -1,18 +1,17 @@
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, Slot, Link } from 'expo-router';
+import { View, Text, StyleSheet } from 'react-native';
 import 'react-native-reanimated';
 
 export default function RootLayout() {
-  // Muat semua 10 font dari folder assets/fonts
   const [fontsLoaded, fontError] = useFonts({
-    // 5 Font Statis
+    // Font statis
     'BebasNeue': require('../assets/fonts/BebasNeue-Regular.ttf'),
     'FiraSans': require('../assets/fonts/FiraSans-Regular.ttf'),
     'Goldman': require('../assets/fonts/Goldman-Regular.ttf'),
     'Lato': require('../assets/fonts/Lato-Black.ttf'),
     'PTSerif': require('../assets/fonts/PTSerif-Regular.ttf'),
-
-    // 5 Font Variabel
+    // Font variabel
     'Bitcount': require('../assets/fonts/BitcountPropSingle-VariableFont_CRSV,ELSH,ELXP,slnt,wght.ttf'),
     'IntelOneMono': require('../assets/fonts/IntelOneMono-VariableFont_wght.ttf'),
     'NotoSansJP': require('../assets/fonts/NotoSansJP-VariableFont_wght.ttf'),
@@ -20,20 +19,38 @@ export default function RootLayout() {
     'RobotoCondensed': require('../assets/fonts/RobotoCondensed-VariableFont_wght.ttf'),
   });
 
-  // Jangan render apapun sampai font selesai dimuat
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  if (!fontsLoaded && !fontError) return null;
 
-  // Jika ada error saat memuat font, tampilkan di console
   if (fontError) {
     console.error("Gagal memuat font:", fontError);
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="+not-found" />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      {/* Slot untuk render halaman */}
+      <Slot />
+
+      {/* Navigasi Global di bawah */}
+      <View style={styles.navbar}>
+        <Link href="/" style={styles.link}>Home</Link>
+        <Link href="/tugas-4" style={styles.link}>Tugas 4</Link>
+      </View>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 15,
+    backgroundColor: '#eee',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+  },
+  link: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'blue',
+  },
+});
