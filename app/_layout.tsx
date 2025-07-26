@@ -32,7 +32,7 @@ export default function RootLayout() {
 
       {/* Navigasi Global di bawah */}
       <View style={styles.navbar}>
-        <Link href="/" style={styles.link}>Home</Link>
+        <Link href="/" style={styles.link}>tugas 6</Link>
         <Link href="/tugas-4" style={styles.link}>Tugas 4</Link>
       </View>
     </View>
